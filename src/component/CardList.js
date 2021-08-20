@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 // import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
@@ -40,28 +40,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function RecipeReviewCard({ item, deleteFunction, addActivity }) {
+export default function RecipeReviewCard({ item, deleteFunction, data, defineValues }) {
   const { id, title } = item
   const classes = useStyles();
   const [addSub, setAddSub] = React.useState(false)
-  const [activityList, setActivityList] = React.useState([])
-  const [activityData, setActivityData] = React.useState([])
-  
+
   const handleAddSubtitle = () => {
     setAddSub(!addSub)
   }
 
-  
-  const handleAddActivity = (data) => {
-    setActivityData(data)
-  }
-  
-  
-
-  useEffect(()=>{
-    // localStorage.setItem(`activityList${id}`, JSON.stringify(activityData))
-    addActivity(activityData)
-  })
+  const showActivity = data.filter(i => i.listId === id)
 
 
   return (
@@ -76,12 +64,12 @@ export default function RecipeReviewCard({ item, deleteFunction, addActivity }) 
         // subheader="September 14, 2016"
       />
       <CardContent>
-        {activityData.map(item => (
+        {showActivity.map(item => (
           <div key={item.id}>s{item.activityTitle}</div>
         ))}
       </CardContent>
       <CardActions disableSpacing>
-          {addSub ? <AddActivity handleClick={handleAddSubtitle} handleAddActivity={handleAddActivity} listId={id}/> : <ButtonIcon handleClick={handleAddSubtitle} />}
+          {addSub ? <AddActivity handleClick={handleAddSubtitle} listId={id} defineValues={defineValues}/> : <ButtonIcon handleClick={handleAddSubtitle} />}
       </CardActions>
     </Card>
   );

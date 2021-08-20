@@ -11,6 +11,7 @@ import CardList from './component/CardList'
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
+
 document.body.style.backgroundColor = "#297F87"
 
 const useStyles = makeStyles((theme) => ({
@@ -38,7 +39,10 @@ function App() {
   const [title, setTitle] = useState("")
   const [listToShow, setListToShow] = useState([])
   const [open, setOpen] = useState(false);
+  
   const [activityList, setActivityList] = useState([])
+
+
 
   const handleClick = () => {
     setIsAdd(!isAdd)
@@ -51,7 +55,7 @@ function App() {
   const handleCreateList = () => {
     if (title.trim().length !== 0){
       const newList = {
-        id: listToShow.length,
+        id:  listToShow.length === 0 ? listToShow.length : listToShow[listToShow.length-1].id + 1,
         title: title
       }
       // listToShow.push(newList)
@@ -66,7 +70,9 @@ function App() {
   const deleteList = (id) => {
     const data = listToShow.filter(i => i.id !== id)
     setListToShow(data)
-    console.log(listToShow)
+
+    const dataActivity = activityList.filter(i => i.listId !== id)
+    setActivityList(dataActivity)
   }
 
 
@@ -77,10 +83,19 @@ function App() {
 
     setOpen(false);
   };
-
-  const addActivity = (activityData) => {
-    // setActivityList()
-    console.log(activityData[0].continue)
+  
+  const defineValues = (activityTitle, description, needToBeReminded, isContinuous, counter, startDate, listId) => {
+    const newActivity = {
+      id: activityList.length === 0 ? activityList.length : activityList[activityList.length-1].id + 1,
+      activityTitle: activityTitle,
+      description: description,
+      needToBeReminded: needToBeReminded,
+      continue: isContinuous,
+      remindedAt: startDate,
+      every: counter,
+      listId: listId
+    }
+    setActivityList([...activityList, newActivity])
   }
 
   useEffect(() => {
@@ -112,10 +127,7 @@ function App() {
           <ImageList rowHeight="auto" className={classes.imageList} cols={2}>
           {listToShow.map((item) => (
             <ImageListItem key={item.id} cols={item.cols || 1}>
-              <CardList item={item} deleteFunction={deleteList} addActivity={addActivity} />
-              {/* <Typography>{item.id}</Typography>
-              <Typography>{item.title}</Typography> */}
-              {/* <img src={item.img} alt={item.title} /> */}
+              <CardList item={item} deleteFunction={deleteList} data={activityList} defineValues={defineValues}/>
             </ImageListItem>
           ))}
           </ImageList>

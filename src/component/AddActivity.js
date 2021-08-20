@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -64,9 +64,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function AddActivity({ handleClick, handleAddActivity, listId }) {
+export default function AddActivity({ handleClick, handleAddActivity, listId, defineValues }) {
   const classes = useStyles();
-  const [activityData, setActivityData] = React.useState([])
   const [title, setTitle] = React.useState("")
   const [description, setDescription] = React.useState("")
   const [needToBeReminded, setNeedToBeReminded] = React.useState(false)
@@ -75,32 +74,14 @@ export default function AddActivity({ handleClick, handleAddActivity, listId }) 
   const [counter, setCounter] = React.useState(1)
 
   const [startDate, setStartDate] = React.useState(new Date());
-  // let today = new Date().toISOString().slice(0, 10)
-  // const [selectedDate, setSelectedDate] = React.useState(new Date(`${today}T21:11:54`));
-
-  // const handleDateChange = (date) => {
-  //   setSelectedDate(date);
-  //   setRemindedAt(selectedDate)
-  //   console.log(selectedDate)
-  // };
 
   const addActivity = () => {
-    const newActivity = {
-      id: activityData.length,
-      activityTitle: title,
-      description: description,
-      needToBeReminded: needToBeReminded,
-      continue: isContinuous,
-      remindedAt: startDate,
-      every: counter,
-      listId: listId
-    }
-    setActivityData(newActivity)
+    defineValues(title,description,needToBeReminded,isContinuous,startDate, counter, listId)
   }
 
-  useEffect(()=>{
-    handleAddActivity(activityData)
-  })
+  // useEffect(()=>{
+  //   handleAddActivity(activityData)
+  // })
 
   return (
         
