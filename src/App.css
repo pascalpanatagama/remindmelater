@@ -15,5 +15,6 @@
 }
 
 .content-right {
+  margin-left: 15px;
   flex-grow: 2;
 }

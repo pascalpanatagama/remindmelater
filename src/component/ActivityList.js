@@ -1,21 +1,13 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-// import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-// import Collapse from '@material-ui/core/Collapse';
-// import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
-// import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
-// import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-// import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CloseIcon from '@material-ui/icons/Close';
-import ButtonIcon from './ButtonIcon';
-import AddActivity from './AddActivity';
-import ActivityList from './ActivityList';
+import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,39 +33,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function RecipeReviewCard({ item, deleteFunction, data, defineValues, deleteActivity }) {
-  const { id, title } = item
+export default function ActivityList({ item, deleteActivity }) {
   const classes = useStyles();
-  const [addSub, setAddSub] = React.useState(false)
-
-  const handleAddSubtitle = () => {
-    setAddSub(!addSub)
-  }
-
-  const showActivity = data.filter(i => i.listId === id)
-
+  const { id, activityTitle, description, needToBeReminded, remindedAt } = item
 
   return (
     <Card className={classes.root}>
       <CardHeader
         action={
-          <IconButton aria-label="Delete" onClick={()=>deleteFunction(id)}>
+          <IconButton aria-label="Delete" onClick={()=>deleteActivity(id)}>
             <CloseIcon />
           </IconButton>
         }
-        title={title}
+        title={activityTitle}
         // subheader="September 14, 2016"
       />
       <CardContent>
-        {showActivity.map(item => (
-          // <div key={item.id}>s{item.activityTitle}</div>
-          <div key={item.id}>
-            <ActivityList item={item} deleteActivity={deleteActivity}/>
-          </div>
-        ))}
+        <Typography>{description}</Typography>
+        { needToBeReminded ? <Typography>Due : {remindedAt.getDate()}/{remindedAt.getMonth()+1}/{remindedAt.getFullYear()}</Typography> : ""}
       </CardContent>
       <CardActions disableSpacing>
-          {addSub ? <AddActivity handleClick={handleAddSubtitle} listId={id} defineValues={defineValues}/> : <ButtonIcon handleClick={handleAddSubtitle} />}
+
       </CardActions>
     </Card>
   );

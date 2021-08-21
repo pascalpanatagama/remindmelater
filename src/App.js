@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import FormTitle from "./component/FormTitle"
 import ButtonIcon from './component/ButtonIcon';
@@ -7,6 +7,7 @@ import ButtonIcon from './component/ButtonIcon';
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
 import CardList from './component/CardList'
+import CardEvent from './component/CardEvent'
 
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -41,7 +42,6 @@ function App() {
   const [open, setOpen] = useState(false);
   
   const [activityList, setActivityList] = useState([])
-
 
 
   const handleClick = () => {
@@ -85,23 +85,27 @@ function App() {
   };
   
   const defineValues = (activityTitle, description, needToBeReminded, isContinuous, counter, startDate, listId) => {
-    const newActivity = {
-      id: activityList.length === 0 ? activityList.length : activityList[activityList.length-1].id + 1,
-      activityTitle: activityTitle,
-      description: description,
-      needToBeReminded: needToBeReminded,
-      continue: isContinuous,
-      remindedAt: startDate,
-      every: counter,
-      listId: listId
+    if(activityTitle.trim().length !== 0){
+      const newActivity = {
+        id: activityList.length === 0 ? activityList.length : activityList[activityList.length-1].id + 1,
+        activityTitle: activityTitle,
+        description: description,
+        needToBeReminded: needToBeReminded,
+        continue: isContinuous,
+        remindedAt: startDate,
+        every: counter,
+        listId: listId
+      }
+      setActivityList([...activityList, newActivity])
+    } else {
+      setOpen(!open)
     }
-    setActivityList([...activityList, newActivity])
   }
 
-  useEffect(() => {
-    console.log(activityList)
-  })
-
+  const deleteActivity = (id) => {
+    const data = activityList.filter(i => i.id !== id)
+    setActivityList(data)
+  }
 
   return (
     <div className="App">
@@ -127,7 +131,7 @@ function App() {
           <ImageList rowHeight="auto" className={classes.imageList} cols={2}>
           {listToShow.map((item) => (
             <ImageListItem key={item.id} cols={item.cols || 1}>
-              <CardList item={item} deleteFunction={deleteList} data={activityList} defineValues={defineValues}/>
+              <CardList item={item} deleteFunction={deleteList} data={activityList} defineValues={defineValues} deleteActivity={deleteActivity}/>
             </ImageListItem>
           ))}
           </ImageList>
@@ -136,6 +140,7 @@ function App() {
 
       <div className="content-right">
         <h2>Upcoming Events</h2>
+        <CardEvent data={activityList} listTitle={listToShow}/>
       </div>
 
     </div>

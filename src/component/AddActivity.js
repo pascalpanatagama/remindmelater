@@ -74,9 +74,10 @@ export default function AddActivity({ handleClick, handleAddActivity, listId, de
   const [counter, setCounter] = React.useState(1)
 
   const [startDate, setStartDate] = React.useState(new Date());
-
+  // activityTitle, description, needToBeReminded, isContinuous, counter, startDate, listId
   const addActivity = () => {
-    defineValues(title,description,needToBeReminded,isContinuous,startDate, counter, listId)
+    defineValues(title,description,needToBeReminded,isContinuous, counter, startDate, listId)
+    handleClick()
   }
 
   // useEffect(()=>{
