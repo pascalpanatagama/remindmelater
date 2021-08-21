@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import FormTitle from "./component/FormTitle"
 import ButtonIcon from './component/ButtonIcon';
@@ -107,6 +107,45 @@ function App() {
     setActivityList(data)
   }
 
+  const [updateAct, setUpdateAct] = useState([])
+  
+  useEffect(()=>{
+    let today = new Date()
+    let updatedContinue = activityList.map(i =>{
+      let update = {}      
+      update['id'] = i.id
+      update['activityTitle'] = i.activityTitle
+      update['description'] = i.description
+      update['needToBeReminded'] = i.needToBeReminded
+      update['continue'] = i.continue
+      update['every'] = i.every
+      update['listId'] = i.listId
+      update['remindedAt'] = i.remindedAt
+      if( i.remindedAt.toLocaleDateString().toString().toLower === today.toLocaleDateString().toString().toLower && i.continue){
+        // update['remindedAt'] = new Date(i.remindedAt.getTime()+(i.every*24*60*60*1000));
+        update['renewAt'] = new Date(i.remindedAt.getTime()+(i.every*24*60*60*1000))
+      }
+      return update
+    })
+    console.log(updatedContinue)
+    setUpdateAct(updatedContinue)
+  }, [activityList])
+
+  // useEffect(()=>{
+  //   const list = JSON.parse(localStorage.getItem('list'))
+  //   const activity = JSON.parse(localStorage.getItem('activity'))
+  //   if(list && activity){
+  //     setListToShow(list)
+  //     setActivityList(activity)
+  //   }
+  // }, [])
+
+  // useEffect(()=>{
+  //   localStorage.setItem('list', JSON.stringify(listToShow))
+  //   localStorage.setItem('activity', JSON.stringify(updateAct))
+  // }, [listToShow, updateAct])
+
+
   return (
     <div className="App">
       <div className="content-left">
@@ -140,7 +179,7 @@ function App() {
 
       <div className="content-right">
         <h2>Upcoming Events</h2>
-        <CardEvent data={activityList} listTitle={listToShow}/>
+        <CardEvent data={updateAct} />
       </div>
 
     </div>
