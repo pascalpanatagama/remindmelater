@@ -36,12 +36,15 @@ function Alert(props) {
 function App() {
   const classes = useStyles();
 
+  const list = JSON.parse(localStorage.getItem('list'))
+  const activity = JSON.parse(localStorage.getItem('activity'))
+
   const [isAdd, setIsAdd] = useState(false)
   const [title, setTitle] = useState("")
-  const [listToShow, setListToShow] = useState([])
+  const [listToShow, setListToShow] = useState(list || [])
   const [open, setOpen] = useState(false);
   
-  const [activityList, setActivityList] = useState([])
+  const [activityList, setActivityList] = useState(activity || [])
 
 
   const handleClick = () => {
@@ -92,7 +95,8 @@ function App() {
         description: description,
         needToBeReminded: needToBeReminded,
         continue: isContinuous,
-        remindedAt: startDate,
+        remindedAt: startDate.toLocaleDateString(),
+        remindedTime: startDate.getTime(),
         every: counter,
         listId: listId
       }
@@ -121,13 +125,16 @@ function App() {
       update['every'] = i.every
       update['listId'] = i.listId
       update['remindedAt'] = i.remindedAt
-      if( i.remindedAt.toLocaleDateString().toString().toLower === today.toLocaleDateString().toString().toLower && i.continue){
+      update['remindedTime'] = i.remindedTime
+      if( i.remindedAt.toLower === today.toLocaleDateString().toString().toLower && i.continue){
         // update['remindedAt'] = new Date(i.remindedAt.getTime()+(i.every*24*60*60*1000));
-        update['renewAt'] = new Date(i.remindedAt.getTime()+(i.every*24*60*60*1000))
+        let newDay = new Date(i.remindedTime+(i.every*24*60*60*1000))
+        update['remindedTime'] = newDay.getTime()
+        update['renewAt'] = newDay.toLocaleDateString()
       }
       return update
     })
-    console.log(updatedContinue)
+    // console.log(updatedContinue)
     setUpdateAct(updatedContinue)
   }, [activityList])
 
@@ -140,10 +147,10 @@ function App() {
   //   }
   // }, [])
 
-  // useEffect(()=>{
-  //   localStorage.setItem('list', JSON.stringify(listToShow))
-  //   localStorage.setItem('activity', JSON.stringify(updateAct))
-  // }, [listToShow, updateAct])
+  useEffect(()=>{
+    localStorage.setItem('list', JSON.stringify(listToShow))
+    localStorage.setItem('activity', JSON.stringify(activityList))
+  })
 
 
   return (

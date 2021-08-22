@@ -50,7 +50,7 @@ export default function ActivityList({ item, deleteActivity }) {
       />
       <CardContent>
         <Typography>{description}</Typography>
-        { needToBeReminded ? <Typography>Due : {remindedAt.toLocaleDateString()}</Typography> : ""}
+        { needToBeReminded ? <Typography>Due : {remindedAt}</Typography> : ""}
       </CardContent>
       <CardActions disableSpacing>
 

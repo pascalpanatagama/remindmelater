@@ -17,18 +17,18 @@ const useStyles = makeStyles((theme) => ({
 export default function SimplePaper({ data }) {
   const classes = useStyles();
 
-  data = data.filter(i => i.needToBeReminded === true)
+  let today = new Date()
+  data = data.filter(i => (i.needToBeReminded === true && i.remindedTime > today.getTime()))
 
   return (
     <div className={classes.root}>
         {data.map(item => (
             <Paper key={item.id} elevation={3} >
                 <Typography>{item.activityTitle}</Typography>
-                { (item.remindedAt.getTime() < new Date().getTime() + 10 && item.continue) ?
-                    <Typography>{item.renewAt.toLocaleDateString()}</Typography>
-                  : <Typography>{item.remindedAt.toLocaleDateString()}</Typography>
+                { (item.remindedAt === new Date().toLocaleDateString() && item.continue) ?
+                    <Typography>{item.renewAt}</Typography>
+                  : <Typography>{item.remindedAt}</Typography>
                 }
-                <Typography>{item.remindedAt.toLocaleDateString()} - {new Date().toLocaleDateString()}</Typography>
                 {item.continue ? <Typography>Renew every {item.every} days</Typography> : ""}
             </Paper>
         ))}
